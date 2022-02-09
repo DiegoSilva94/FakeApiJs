@@ -39,6 +39,17 @@
                                         </dd>
                                     </div>
                                     <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                        <dt class="text-sm font-medium text-gray-500">Login</dt>
+                                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                            <code>FakerApi.post('/logout', {})</code>
+                                            <button type="button" @click="simularLogout" class="block my-5 w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:my-3 sm:w-auto sm:text-sm" @click="open = false">
+                                                Simular
+                                            </button>
+                                            Resultado
+                                            <pre class="bg-gray-200 p-2">{{resultLogout}}</pre>
+                                        </dd>
+                                    </div>
+                                    <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                                         <dt class="text-sm font-medium text-gray-500">Register</dt>
                                         <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                                             <code>FakerApi.post('/register', { name:'teste', username: 'teste', password: 'teste' })</code>
@@ -218,6 +229,7 @@
         data() {
             return {
                 resultLogin: [],
+                resultLogout: [],
                 resultRegister: [],
                 resultMe: [],
                 resultListaPosts: [],
@@ -235,6 +247,9 @@
         methods: {
             async simularLogin() {
                 this.resultLogin = await window.FakerApi.post('/login', { username: 'teste', password: 'teste' }).catch((response) => response)
+            },
+            async simularLogout() {
+                this.resultLogin = await window.FakerApi.post('/logout', {}).catch((response) => response)
             },
             async simularRegister() {
                 this.resultRegister = await window.FakerApi.post('/register', { name:'teste', username: 'teste', password: 'teste' }).catch((response) => response)

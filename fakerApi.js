@@ -7,6 +7,13 @@ class FakerApi {
                 message: 'Usuario Logado'
             }
         },
+        '/logout': function (instance, {}) {
+            instance._logout()
+            return {
+                success: true,
+                message: 'Deslogado'
+            }
+        },
         '/register': function (instance, {name, username, password}) {
             if (!name || !username || !password) throw 'Dados invalidos'
 
@@ -209,6 +216,10 @@ class FakerApi {
     _setAuth(user)
     {
         window.localStorage.setItem('auth', JSON.stringify(user))
+    }
+    _logout()
+    {
+        window.localStorage.removeItem('auth')
     }
     _auth(username, password)
     {
