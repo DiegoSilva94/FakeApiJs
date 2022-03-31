@@ -1,20 +1,20 @@
-class FakerApi {
+export default class FakerApi {
     routes = {
-        '/login': function (instance, {username, password}) {
+        '/login': function (instance: FakerApi, {username, password}) {
             instance._auth(username, password)
             return {
                 success: true,
                 message: 'Usuario Logado'
             }
         },
-        '/logout': function (instance, {}) {
+        '/logout': function (instance: FakerApi, {}) {
             instance._logout()
             return {
                 success: true,
                 message: 'Deslogado'
             }
         },
-        '/register': function (instance, {name, username, password}) {
+        '/register': function (instance: FakerApi, {name, username, password}) {
             if (!name || !username || !password) throw 'Dados invalidos'
 
             const users = instance._allUsers()
@@ -26,33 +26,33 @@ class FakerApi {
                 message: 'Usuario cadastrado'
             }
         },
-        '/me' : function (instance, {}) {
+        '/me' : function (instance: FakerApi, {}) {
             instance._isAuthenticate()
             return {
                 success: true,
                 data: instance._getAuth()
             }
         },
-        '/posts': function (instance, {}) {
+        '/posts': function (instance: FakerApi, {}) {
             return {
                 success: true,
                 data: instance._allPosts()
             }
         },
-        '/posts/view': function (instance, {post_id}) {
+        '/posts/view': function (instance: FakerApi, {post_id}) {
             return {
                 success: true,
                 data: instance._getPost(post_id)
             }
         },
-        '/posts/create': function (instance, {title, content}) {
+        '/posts/create': function (instance: FakerApi, {title, content}) {
             instance._setPost({ title, content })
             return {
                 success: true,
                 message: 'Post adicionado'
             }
         },
-        '/posts/update': function (instance, {post_id, post: {title, content}}) {
+        '/posts/update': function (instance: FakerApi, {post_id, post: {title, content}}) {
             const post = instance._getPost(post_id)
             post.title = title
             post.content = content
@@ -62,33 +62,33 @@ class FakerApi {
                 message: 'Post atualizado'
             }
         },
-        '/posts/remove': function (instance, {post_id}) {
+        '/posts/remove': function (instance: FakerApi, {post_id}) {
             instance._removePost(post_id)
             return {
                 success: true,
                 message: 'Post removido'
             }
         },
-        '/comments': function (instance, {post_id}) {
+        '/comments': function (instance: FakerApi, {post_id}) {
             return {
                 success: true,
                 data: instance._getComments(post_id)
             }
         },
-        '/comments/view': function (instance, {post_id, comment_id}) {
+        '/comments/view': function (instance: FakerApi, {post_id, comment_id}) {
             return {
                 success: true,
                 data: instance._getComment(post_id, comment_id)
             }
         },
-        '/comments/create': function (instance, {post_id, comment: {content}}) {
+        '/comments/create': function (instance: FakerApi, {post_id, comment: {content}}) {
             instance._setComment(post_id, { content })
             return {
                 success: true,
                 message: 'Comentario adicionado'
             }
         },
-        '/comments/update': function (instance, {post_id, comment_id, comment: {content}}) {
+        '/comments/update': function (instance: FakerApi, {post_id, comment_id, comment: {content}}) {
             const comment = instance._getComment(post_id, comment_id)
             comment.content = content
             instance._setComment(post_id, comment)
@@ -97,7 +97,7 @@ class FakerApi {
                 message: 'Comentario atualizado'
             }
         },
-        '/comments/remove': function (instance, {post_id, comment_id}) {
+        '/comments/remove': function (instance: FakerApi, {post_id, comment_id}) {
             instance._removeComment(post_id, comment_id)
             return {
                 success: true,
@@ -105,17 +105,17 @@ class FakerApi {
             }
         },
     }
-    getRoute(route) {
+    getRoute(route: string) {
         const routeFunction = this.routes[route]
         if (typeof routeFunction !== 'function') {
-            return (params) => {
+            return () => {
                 return {
                     success: false,
                     message: 'Rota não existe'
                 }
             }
         }
-        return (params) => {
+        return (params: any) => {
             try {
                 return routeFunction(this, params)
             } catch (e) {
@@ -127,7 +127,7 @@ class FakerApi {
         }
 
     }
-    request(route, params)
+    request(route: string, params: any)
     {
         const routeFunction = this.getRoute(route)
         return new Promise(function (resolve, reject) {
@@ -141,19 +141,19 @@ class FakerApi {
             }, Math.random() * 200 + 150)
         })
     }
-    get(route, params)
+    get(route: string, params: any)
     {
         return this.request(route, params)
     }
-    post(route, params)
+    post(route: string, params: any)
     {
         return this.request(route, params)
     }
-    put(route, params)
+    put(route: string, params: any)
     {
         return this.request(route, params)
     }
-    delete(route, params)
+    delete(route: string, params: any)
     {
         return this.request(route, params)
     }
@@ -173,23 +173,23 @@ class FakerApi {
     }
     _addNextUserId()
     {
-        window.localStorage.setItem('nextUserId', this._getNextUserId() + 1)
+        window.localStorage.setItem('nextUserId', String(this._getNextUserId() + 1))
     }
-    _insertUsers(users)
+    _insertUsers(users: any)
     {
         window.localStorage.setItem('users', JSON.stringify(users))
     }
-    _getUser(user_id)
+    _getUser(user_id: any)
     {
         const users = this._allUsers()
         return users.filter((item) => item.id === user_id)[0]
     }
-    _getUserByUsername(username)
+    _getUserByUsername(username: string)
     {
         const users = this._allUsers()
         return users.filter((item) => item.username === username)[0]
     }
-    _setUser(user)
+    _setUser(user: any)
     {
         let users = this._allUsers()
         if (!user.id) {
@@ -213,7 +213,7 @@ class FakerApi {
         }
         return true
     }
-    _setAuth(user)
+    _setAuth(user: any)
     {
         window.localStorage.setItem('auth', JSON.stringify(user))
     }
@@ -221,7 +221,7 @@ class FakerApi {
     {
         window.localStorage.removeItem('auth')
     }
-    _auth(username, password)
+    _auth(username: string, password: string)
     {
         const user = this._getUserByUsername(username)
         if (!user) {
@@ -249,13 +249,13 @@ class FakerApi {
     }
     _addNextPostId()
     {
-        window.localStorage.setItem('nextPostId', this._getNextPostId() + 1)
+        window.localStorage.setItem('nextPostId', String(this._getNextPostId() + 1))
     }
-    _insertPosts(posts)
+    _insertPosts(posts: any)
     {
         window.localStorage.setItem('posts', JSON.stringify(posts))
     }
-    _getPost(post_id)
+    _getPost(post_id: any)
     {
         const posts = this._allPosts()
         const post = posts.filter((item) => item.id === post_id)[0]
@@ -265,7 +265,7 @@ class FakerApi {
         }
         return post
     }
-    _setPost(post)
+    _setPost(post: any)
     {
         this._isAuthenticate()
         const auth = this._getAuth()
@@ -280,7 +280,7 @@ class FakerApi {
         }
         this._insertPosts(posts)
     }
-    _removePost(post_id)
+    _removePost(post_id: any)
     {
         this._isAuthenticate()
         const auth = this._getAuth()
@@ -292,11 +292,11 @@ class FakerApi {
 
     /**
      * Comment Section
-     * @param id
+     * @param post_id
      * @returns {*[]}
      * @private
      */
-    _getComments(post_id)
+    _getComments(post_id: any)
     {
         const post = this._getPost(post_id)
         return post.comments || []
@@ -307,9 +307,9 @@ class FakerApi {
     }
     _addNextCommentId()
     {
-        window.localStorage.setItem('nextCommentId', this._getNextCommentId() + 1)
+        window.localStorage.setItem('nextCommentId', String(this._getNextCommentId() + 1))
     }
-    _setComment(post_id, comment)
+    _setComment(post_id: any, comment: any)
     {
         this._isAuthenticate()
         const auth = this._getAuth()
@@ -324,14 +324,14 @@ class FakerApi {
         }
         this._setPost(post)
     }
-    _getComment(post_id, comment_id)
+    _getComment(post_id: any, comment_id: any)
     {
         const comments = this._getComments(post_id)
         const comment = comments.filter((item) => item.id === comment_id)[0]
         if (!comment) throw 'Post não encontrado'
         return comment
     }
-    _removeComment(post_id, comment_id)
+    _removeComment(post_id: any, comment_id: any)
     {
         this._isAuthenticate()
         const auth = this._getAuth()
@@ -343,4 +343,3 @@ class FakerApi {
     }
 
 }
-window.FakerApi = new FakerApi()
